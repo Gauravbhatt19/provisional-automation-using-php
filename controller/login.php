@@ -297,7 +297,7 @@ table td
 				      				<th>Request Time</th></tr>
 				      			<?php
 				      			$conn=mysqli_connect('localhost','root','','spidersd_provisional');
-								$qry="SELECT * FROM records1 ORDER BY tm ASC";
+								$qry="SELECT * FROM records ORDER BY tm ASC";
 								$result=mysqli_query($conn,$qry);
 								$i=1;
 								while($row=mysqli_fetch_assoc($result)){

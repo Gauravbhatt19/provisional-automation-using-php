@@ -13,12 +13,16 @@ $fname=$_SESSION['fname'];
 $roll=$_SESSION['roll'];
 $brnch=$_SESSION['branch'];
 $email=$_SESSION['email'];
-$qry="INSERT INTO records1(name,fname,roll,branch,email) VALUES ('{$name}','{$fname}','{$roll}','{$brnch}','{$email}')";
-$result=mysqli_query($conn,$qry);
-$qry="SELECT * FROM records1";
+$qry="SELECT * FROM records";
 $result=mysqli_query($conn,$qry);
 $row_count=mysqli_num_rows($result);
-$id=$row_count;
+$rndm=rand($row_count,$row_count+rand(0,100));
+$qry="INSERT INTO records(name,fname,roll,branch,email,rndm) VALUES ('{$name}','{$fname}','{$roll}','{$brnch}','{$email}','{$rndm}')";
+$result=mysqli_query($conn,$qry);
+$qry="SELECT * FROM records WHERE rndm='{$rndm}'";
+$result=mysqli_query($conn,$qry);
+$row=mysqli_fetch_assoc($result);
+$id=$row['slno'];
 while (!empty($_POST[$p])) {
 	$pr='sub'.$i;
 $sb1=mysqli_escape_string($conn,$_POST[$pr]);
@@ -312,7 +316,7 @@ table td
 	</header>
 	<div  class="bx xyz" style="padding-bottom:200px; ">
 				<div class="grd">
-					<h1>Your Request is submitted you will get copy of Provision within 48 hrs in your this-<?php echo $email;?> email account .</h1>
+					<h1>Your Request is submitted you will get copy of Provision within 48 hrs in your this-<?php echo $email;?> email account . <a href="./index.php" style="color:blue; text-decoration:underline; ">Home</a></h1>
 	      	</div>
 	      </div>
 

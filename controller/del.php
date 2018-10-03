@@ -10,7 +10,7 @@ else
 {
 	 $conn=mysqli_connect('localhost','root','','spidersd_provisional');
 				   				$id=$_GET['ref'];
-								$qry="DELETE FROM records1 WHERE slno='{$id}'";
+								$qry="DELETE FROM records WHERE slno='{$id}'";
 								$result=mysqli_query($conn,$qry);
 								$qry="DELETE FROM marks WHERE ref='{$id}'";
 								$result=mysqli_query($conn,$qry);

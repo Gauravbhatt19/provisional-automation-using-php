@@ -19,7 +19,7 @@ if(empty($id) or empty($st))
 			var x=inpt1.value;
 			var y=inpt2.value;
 			updt.value=eval('x-(-y)');
-			if(updt.value>=60){
+			if((updt.value>=60) && (x>=30)) {
 				updt1.value='PASS';
 			}
 			else
@@ -372,6 +372,7 @@ table td
 			<h1>Provisional Marksheet Portal</h1>
 		</nav>
 	</header>
+	      		<form action="./print_gen.php" method='POST'>
 	<div  class="bx xyz">
 				<div class="grd">
 	      	<div>
@@ -379,7 +380,7 @@ table td
 				   	<tbody>		<tr> <th>Name:</th>
 				   		<?php $conn=mysqli_connect('localhost','root','','spidersd_provisional');
 				   				$id=$_GET['ref'];
-								$qry="SELECT * FROM records1 WHERE slno='{$id}'";
+								$qry="SELECT * FROM records WHERE slno='{$id}'";
 								$result=mysqli_query($conn,$qry);
 								$row=mysqli_fetch_assoc($result);
 									$sl=$row['slno'];
@@ -387,15 +388,17 @@ table td
 									$roll=$row['roll'];
 									$fnm=$row['fname'];
 									$brnch=$row['branch'];
-									$st=$row['status'];?>
-				      				<td><?php echo '<input style="padding:10px;width:100%; font-size:1.1rem; text-align:center;" type="text" value="'.$nm.'">';?></td>
+									$st=$row['status'];
+									$mail=$row['email'];?>
+									<?php echo '<input type="number" name="iden" hidden value="'.$sl.'""><input type="text" name="mail" hidden value="'.$mail.'"">'; ?>
+				      				<td><?php echo '<input style="padding:10px;width:100%; font-size:1.1rem; text-align:center;" type="text" name="nm" value="'.$nm.'">';?></td>
 				      				<th>Father's Name:</th>
-				      				<td><?php echo '<input style="padding:10px;width:100%; font-size:1.1rem; text-align:center;" type="text" value="'.$fnm.'">';?></td>
+				      				<td><?php echo '<input style="padding:10px;width:100%; font-size:1.1rem; text-align:center;" type="text" name="fnm" value="'.$fnm.'">';?></td>
 				      			</tr>
 				      					<tr><th>Roll No.:</th>
-				      						<td><?php echo '<input style="padding:10px;width:100%; font-size:1.1rem; text-align:center;" type="text" value="'.$roll.'">';?></td>
+				      						<td><?php echo '<input style="padding:10px;width:100%; font-size:1.1rem; text-align:center;" name="roll" type="text" value="'.$roll.'">';?></td>
 						      				<th>Branch:</th>
-						      				<td><?php echo '<input style="padding:10px;width:100%; font-size:1.1rem; text-align:center;" type="text" value="'.$brnch.'">';?></td>
+						      				<td><?php echo '<input style="padding:10px;width:100%; font-size:1.1rem; text-align:center;" name="brnch" type="text" value="'.$brnch.'">';?></td>
 									</tr>
 				      			</tbody>
 				      		</table>    
@@ -408,7 +411,6 @@ table td
 			<h1 style="margin-top:-30px; ">Details for Provisional</h1>
 			<div class="grd">
 	      	<div>
-	      		<form action="./sub.php" method='POST'>
 			<table  id='tbl'>
 				   	<tbody style="width:100%;">		<tr> <th rowspan="2">S. No.</th>
 				      				<th rowspan="2">Subject</th>
@@ -436,39 +438,24 @@ table td
 									$mmtotal=$mmsem+$mmses;
 									$mnth_yr=$row['mnth_yr'];
 									$exam_type=$row['exam_type'];
-									echo '<tr><td>'.$i.'</td><td style="width:80%;"><input type="text" style="padding:5px; font-size:1.01rem; text-align:center; width:100%;" value="'.$sub.'"></td><td><input type="number" style="padding:5px; width:100%; font-size:1.01rem; text-align:center;" value="'.$mmsem.'"></td><td><input type="number" style="padding:5px;width:100%; font-size:1.01rem; text-align:center;" value="'.$mmses.'"></td><td><input type="number" style="padding:5px;width:100%; font-size:1.01rem; text-align:center;" value="'.$mmtotal.'"></td><td><input id="in1'.$i.'"  onchange="add('.$i.')" type="number" style="padding:5px;width:100%; font-size:1.01rem; text-align:center;" value="00"></td><td><input type="number" style="padding:5px;width:100%; font-size:1.01rem; text-align:center;" value="00" onchange="add('.$i.')" id="in2'.$i.'" ></td><td><input id="out'.$i.'" type="number" style="padding:5px;width:100%; font-size:1.01rem; text-align:center;" value="00"></td><td><input type="text" id="out1'.$i.'"  style="padding:5px;width:100%; font-size:1.01rem; text-align:center;" value="FAIL"></td><td style="width:20%;"><input type="text" style="padding:5px;width:100%; font-size:1.01rem; text-align:center;" value="'.$mnth_yr.'"></td><td><input type="text" style="padding:5px;  font-size:1.01rem; text-align:center;" value="'.$exam_type.'"></td></tr>';
-									$i++;}
+									echo '<tr><td>'.$i.'</td><td style="width:80%;"><input type="text" name="sub'.$i.'" style="padding:5px; font-size:1.01rem; text-align:center; width:100%;" value="'.$sub.'"></td><td><input type="number" style="padding:5px; width:100%; font-size:1.01rem; text-align:center;" name="mmsem'.$i.'" value="'.$mmsem.'"></td><td><input type="number" style="padding:5px;width:100%; font-size:1.01rem;  text-align:center;" value="'.$mmses.'" name="mmses'.$i.'"></td><td><input type="number" style="padding:5px;width:100%; font-size:1.01rem; text-align:center;" name="mmtotal'.$i.'" value="'.$mmtotal.'"></td><td><input id="in1'.$i.'"  onchange="add('.$i.')" type="number" name="obtmrksem'.$i.'" style="padding:5px;width:100%; font-size:1.01rem; text-align:center;" value="00"></td><td><input type="number" name="obtmrkses'.$i.'" style="padding:5px;width:100%; font-size:1.01rem; text-align:center;" value="00" onchange="add('.$i.')" id="in2'.$i.'" ></td><td><input id="out'.$i.'" type="number" style="padding:5px;width:100%; font-size:1.01rem; text-align:center;" value="00" name="obtmrktotal'.$i.'" ></td><td><input type="text" id="out1'.$i.'"  name="result'.$i.'" style="padding:5px;width:100%; font-size:1.01rem; text-align:center;" value="FAIL"></td><td style="width:20%;"><input type="text" style="padding:5px;width:100%; font-size:1.01rem; text-align:center;" name="mnth_yr'.$i.'" value="'.$mnth_yr.'"></td><td><input type="text" style="padding:5px;  font-size:1.01rem; text-align:center;" name="exam_type'.$i.'" value="'.$exam_type.'"></td></tr>';
+									$i++;
+								}
 									?>
-				      			<!-- 	<tr id='tr1'>
-				      					<td>1</td>
-				      					<td><input type="text" style='width:100%;' placeholder="Enter Subject code & name" name='sub1'  required/></td>
-				      					<td> -->
-				      						<!-- <input type="text" style='width:100%;' placeholder="e.g. 100 or 50" onchange="add('1')"  id='1im1'/> -->
-											<!-- <input type="number" style='width:100%;' placeholder="e.g. 100 or 50" id='1im1' name='mme1'  required/>
-				      					</td>
-				      					<td><input type="number" style='width:100%;' placeholder="e.g. 50 or 25"  id='1im2'  name='mmi1'  required/></td>
-				      					<td><input type="text" style='width:100%;' placeholder="e.g. Oct 2015" id='1im2'  name='my1'  required/></td>
-				      					<td><select id="drp1" style='width:100%;'  name='extyp1' required>
-				      						<option value="" disabled selected>Exam type</option>
-				      						<option value="REGULAR BACK">Regular Back</option>
-				      						<option value="INTERNAL BACK">Internal Back</option>
-				      						<option value="SPECIAL BACK">Special Back</option>
-				      					</select></td>
-				      				</tr>  -->
 				      			</tbody>
 				      		</table>
 				      		<?php $lnk='del.php?ref='.$_GET['ref']; ?>
 				      		<?php echo '<a href="'.$lnk.'"  class="btn" style="width:100%;height:100%;">Delete Record</a>'; ?> 	
-				      		<input type="submit" class='btn' value="Generate Provisional" />	
-				      		</form>    
+				      		<input type="submit" class='btn' value="Generate Provisional" />  
 	      </div>
 	  </div> 	
 	</div>
 </div>
 </div>
+</form>  
 
 	<?php
-	include 'footer.php';
+	include '..\footer.php';
 	?>
 </body>
 </html>
