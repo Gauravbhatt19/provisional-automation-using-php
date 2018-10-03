@@ -1,8 +1,17 @@
+<?php
+session_start();
+$id=$_SESSION['id'];
+$st=$_SESSION['logged_in']; 
+if(empty($id) or empty($st))
+{
+	header('location: ../index.php');
+}
+?>
 <html>
 <head>
 	<meta charset="UTF-8">
 	<title>Provisional | THDCIHET</title>
-	<style>body
+		<style>body
 {
 	font-family:Verdana,arial; 
 	overflow-x:hidden; 
@@ -217,6 +226,39 @@ footer
 {
 	display:block; 
 }
+.xyz
+{
+	display: grid;
+	grid-template-columns:repeat(auto-fit,minmax(400px,1fr)); 
+	background-color:rgba(215,228,245,1);
+	color:rgba(40,40,40,0.7);  
+	margin:-20px -10px -8px -8px;  
+	padding:10px; 
+}
+.grd
+{
+	display:grid;
+	grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+}
+table
+{
+	width:100%;
+	text-align:center; 
+	overflow-x:scroll; 
+	background-color:#fff; 
+}
+table th
+{
+	padding:10px; 
+	border:1px solid #000; 
+	background-color: rgba(48,57,177,1);
+	color:#fff;
+}
+table td
+{
+	padding:1px; 
+	border:1px solid #000; 
+}
 </style>
 	<script>
 		function bdf()
@@ -228,83 +270,63 @@ footer
 <body>
 <header>
 		<div class="logo">
-			<img src="img/logo.png" width="100">
+			<img src="../img/logo.png" width="100">
 			<h1>THDC Institute of Hydropower Engineering and Technology</h1>
 		</div>
 		<nav style='display:grid;
-	grid-template-columns:6fr 1fr;'>
+	grid-template-columns:2fr 1fr;'>
 			<h1>Provisional Marksheet Portal</h1>
 			<div>
-				<a href="javascript:void(0)" class='btn' onclick="bdf()">Login</a>
+				<a href="./login.php" class='btn' >Applications</a>
+				<a href="./logout.php" class='btn' >Logout</a>
 			</div>
 		</nav>
 	</header>
-	<div  style="background-color:rgba(0,0,0,0.7); position:fixed; width:100%; height:100%; top:0;left:0;z-index:100;" hidden id='bdf' >
-<div class="lg bfg" style="z-index:101;transition:0.5s;">
-		<form action="./Controller/" class="bx" onsubmit="validate()" method="post">
-			<h1>Login <span style='float:right;color:red;user-select:none; cursor:pointer;' onclick="bdf()">X</span></h1>
-			<div>
-				<label for="lid">Id</label></div>
-				<div class="bo"><input type="text" id='lid' placeholder="Login ID"  name='lid'  required>
-			</div>
-			<div>
-				<label for="pass">Password</label></div>
-				<div class="bo"><input type="Password" id='pass' placeholder="Login Password"  name='pass' required>
-			</div>
-			<div class="bo">
-				<input type="submit" value="Login" >
-			</div>
-		</form>
+<div class="xyz" style="padding-bottom:130px; ">
+	<div class="lg">
+		<div  class="bx">
+			<h1 style="margin-top:-30px; ">Generated Provisionals</h1>
+			<div class="grd">
+	      	<div>
+			<table  id='tbl'>
+				   	<tbody>		<tr> <th>Sl. no.</th>
+				      				<th>Student Name</th>
+				      				<th>Roll No.</th>
+				      				<th>Father's Name</th>
+				      				<th>Branch</th>
+				      				<th>File Name</th>
+				      				<th>Generated Time</th></tr>
+				      			<?php
+				      			$conn=mysqli_connect('localhost','root','','spidersd_provisional');
+								$qry="SELECT * FROM records1 ORDER BY tm ASC";
+								$result=mysqli_query($conn,$qry);
+								$i=1;
+								while($row=mysqli_fetch_assoc($result)){
+									$sl=$row['slno'];
+									$nm=$row['name'];
+									$roll=$row['roll'];
+									$fnm=$row['fname'];
+									$brnch=$row['branch'];
+									$tm=$row['tm'];
+									$st=$row['status'];
+									$filename=$sl.'p'.$roll.'.pdf';
+									if($st) {
+										
+									echo '<tr><td>'.$i.'</td><td>'.$nm.'</td><td>'.$roll.'</td><td>'.$fnm.'</td><td>'.$brnch.'</td><td>'.$filename.'</td><td>'.$tm.'</td></tr>';
+									$i++;
+									}
+								}
+								
+				      			?>
+				      			</tbody>
+				      		</table>   
+	      </div>
+	  </div> 	
 	</div>
 </div>
-	<div class="xyz">		
-<div class="bd">
-		<div class="bx" id="log">
-	      	<h1>Instructions</h1>
-	      	<ol>
-	      	<li><h3> Kindly fill all your details in the form given in portal. (Applying)</h3></li>
-<li><h3>  Once the details are filled , check the mail id which you provided. (Waiting Time)</h3></li>
-<li><h3>  You shall receive a copy of the provisional marksheet on your mail id.(Receiving Soft Copy)</h3></li>
-<li><h3> Take a Print out of this and then get it signed from the Dy.Controller of Examination Division.(Validating)</h3></li>
-	      	</ol>
-	      	</div>
-	      </div>
-<div class="lg">
-		<form action="./_apply.php" class="bx" onsubmit="validate()" method="post">
-			<div>
-				<label for="stud-name">Student Name</label></div>
-				<div class="bo"><input type="text" id='stud-name' placeholder="Student Name"  name='sname'  required>
-			</div>
-			<div>
-				<label for="father-name">Father's Name</label></div>
-				<div class="bo"><input type="text" id='father-name' placeholder="Father's Name"  name='fname' required>
-			</div>
-			<div>
-				<label for="roll-no">Roll No.</label></div>
-				<div class="bo"><input type="number" id='roll-no' placeholder="Roll No."  name='rno' required>
-			</div>
-					<div>
-				<label for="brnch">Branch</label>			</div>
-				<div class="bo"><select id='brnch' name='brnch'>
-					<option selected value='CSE'>CSE</option>
-					<option value="ECE">ECE</option>
-					<option value="CE">CE</option>
-					<option value="ME">ME</option>
-					<option value="EE">EE</option>	
-				</select></div> 
-
-			<div>
-				<label for="mail">Email</label></div>
-				<div class="bo"><input type="email" id='mail' placeholder="Where Provisional to be receive"  name='mail'  required>
-			</div>
-			<div class="bo">
-				<input type="submit" value="Initiate for Provisional" >
-			</div>
-		</form>
-	</div>
 </div>
 		<?php
-	include 'footer.php';
+	include '../footer.php';
 	?>
 </body>
 </html>

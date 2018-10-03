@@ -1,8 +1,17 @@
+<?php
+session_start();
+$id=$_SESSION['id'];
+$st=$_SESSION['logged_in']; 
+if(empty($id) or empty($st))
+{
+	header('location: ../index.php');
+}
+?>
 <html>
 <head>
 	<meta charset="UTF-8">
 	<title>Provisional | THDCIHET</title>
-	<style>body
+		<style>body
 {
 	font-family:Verdana,arial; 
 	overflow-x:hidden; 
@@ -250,7 +259,6 @@ table td
 	padding:1px; 
 	border:1px solid #000; 
 }
-
 </style>
 	<script>
 		function bdf()
@@ -260,67 +268,63 @@ table td
 	</script>
 </head>
 <body>
-	<?php
-	include 'header.php';
-	?>
-	<div class="xyz">
+<header>
+		<div class="logo">
+			<img src="../img/logo.png" width="100">
+			<h1>THDC Institute of Hydropower Engineering and Technology</h1>
+		</div>
+		<nav style='display:grid;
+	grid-template-columns:2fr 1fr;'>
+			<h1>Provisional Marksheet Portal</h1>
+			<div>
+				<a href="./generated.php" class='btn' >Generated Provisionals</a>
+				<a href="./logout.php" class='btn' >Logout</a>
+			</div>
+		</nav>
+	</header>
+<div class="xyz" style="padding-bottom:130px; ">
 	<div class="lg">
 		<div  class="bx">
-			<h1 style="margin-top:-30px; ">Enter Details</h1>
+			<h1 style="margin-top:-30px; ">Application List for Provisionals</h1>
 			<div class="grd">
 	      	<div>
-			<table>
-				   	<tbody>		<tr> <th rowspan="2">S. No.</th>
-				      				<th rowspan="2">Subject</th>
-				      				<th colspan="3">Maximum Marks</th>
-				      				<th colspan="3">Marks Obtained</th>
-				      				<th rowspan="2">Result</th> 
-				      				<th rowspan="2">Month & Year</th>
-				      				<th rowspan="2">Exam</th></tr>
-				      					<tr>
-				      				<th>Sem</th>
-				      				<th>Ses</th>
-				      				<th>Total</th>
-				      				<th>Sem</th>
-				      				<th>Ses</th>
-				      				<th>Total</th> 
-									</tr>
-				      				<tr>
-				      					<td>1</td>
-				      					<td>TCS 301 Mathematics</td>
-				      					<td>100</td>
-				      					<td>50</td>
-				      					<td>150</td>
-				      					<td>79</td>
-				      					<td>45</td>
-				      					<td>124</td>
-				      					<td>Pass</td>
-				      					<td>Oct 2015</td>
-				      					<td>Regular Back</td>
-				      				</tr>
-				      				<tr>
-				      					<td>1</td>
-				      					<td>TCS 301 Mathematics</td>
-				      					<td>100</td>
-				      					<td>50</td>
-				      					<td>150</td>
-				      					<td>79</td>
-				      					<td>45</td>
-				      					<td>124</td>
-				      					<td>Pass</td>
-				      					<td>Oct 2015</td>
-				      					<td>Regular Back</td>
-				      				</tr>
+			<table  id='tbl'>
+				   	<tbody>		<tr> <th>Sl. no.</th>
+				      				<th>Student Name</th>
+				      				<th>Roll No.</th>
+				      				<th>Father's Name</th>
+				      				<th>Branch</th>
+				      				<th>Request Time</th></tr>
+				      			<?php
+				      			$conn=mysqli_connect('localhost','root','','spidersd_provisional');
+								$qry="SELECT * FROM records1 ORDER BY tm ASC";
+								$result=mysqli_query($conn,$qry);
+								$i=1;
+								while($row=mysqli_fetch_assoc($result)){
+									$sl=$row['slno'];
+									$nm=$row['name'];
+									$roll=$row['roll'];
+									$fnm=$row['fname'];
+									$brnch=$row['branch'];
+									$tm=$row['tm'];
+									$st=$row['status'];
+									if( !($st) ) {
+										$lnk='generatepro.php?ref='.$sl;
+									echo '<tr><td>'.$i.'</td><td>'.$nm.'</td><td><a href="'.$lnk.'" style="color:blue; text-decoration:underline;">'.$roll.'</a></td><td>'.$fnm.'</td><td>'.$brnch.'</td><td>'.$tm.'</td></tr>';
+									$i++;
+									}
+								}
+								
+				      			?>
 				      			</tbody>
-				      		</table>	      		
+				      		</table>   
 	      </div>
 	  </div> 	
 	</div>
 </div>
 </div>
-
-	<?php
-	include 'footer.php';
+		<?php
+	include '../footer.php';
 	?>
 </body>
 </html>

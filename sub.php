@@ -1,8 +1,49 @@
+<?php
+session_start();
+if(empty($_POST['sub1']) or is_null($_SESSION['name']))
+{
+	header('location: index.php');
+}
+else{
+$conn=mysqli_connect('localhost','root','','spidersd_provisional');
+$i=1;
+$p='sub'.$i;
+$name=$_SESSION['name'];
+$fname=$_SESSION['fname'];
+$roll=$_SESSION['roll'];
+$brnch=$_SESSION['branch'];
+$email=$_SESSION['email'];
+$qry="INSERT INTO records1(name,fname,roll,branch,email) VALUES ('{$name}','{$fname}','{$roll}','{$brnch}','{$email}')";
+$result=mysqli_query($conn,$qry);
+$qry="SELECT * FROM records1";
+$result=mysqli_query($conn,$qry);
+$row_count=mysqli_num_rows($result);
+$id=$row_count;
+while (!empty($_POST[$p])) {
+	$pr='sub'.$i;
+$sb1=mysqli_escape_string($conn,$_POST[$pr]);
+	$pr2='mme'.$i;
+$me1=mysqli_escape_string($conn,$_POST[$pr2]);
+	$pr3='mmi'.$i;
+$mi1=mysqli_escape_string($conn,$_POST[$pr3]);
+	$pr4='my'.$i;
+$my1=mysqli_escape_string($conn,$_POST[$pr4]);
+	$pr5='extyp'.$i;
+$typ1=mysqli_escape_string($conn,$_POST[$pr5]);
+$qry1="INSERT INTO marks(subject,mmsem,mmses,mnth_yr,exam_type,roll,ref) VALUES ('{$sb1}','{$me1}','{$mi1}','{$my1}','{$typ1}','{$roll}','{$id}')";
+$result=mysqli_query($conn,$qry1);
+$i++;
+$p='sub'.$i;
+}
+}
+session_unset();
+?>
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>Provisional | THDCIHET</title>
-	<style>body
+	<title>Provisional | THDCIHET</title>	
+	<style>
+	body
 {
 	font-family:Verdana,arial; 
 	overflow-x:hidden; 
@@ -217,6 +258,40 @@ footer
 {
 	display:block; 
 }
+.xyz
+{
+	display: grid;
+	grid-template-columns:repeat(auto-fit,minmax(400px,1fr)); 
+	background-color:rgba(215,228,245,1);
+	color:rgba(40,40,40,0.7);  
+	margin:-20px -10px -8px -8px;  
+	padding:10px; 
+}
+.grd
+{
+	display:grid;
+	grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+}
+table
+{
+	width:100%;
+	text-align:center; 
+	overflow-x:scroll; 
+	background-color:#fff; 
+}
+table th
+{
+	padding:10px; 
+	border:1px solid #000; 
+	background-color: rgba(48,57,177,1);
+	color:#fff;
+}
+table td
+{
+	padding:1px; 
+	border:1px solid #000; 
+}
+
 </style>
 	<script>
 		function bdf()
@@ -226,84 +301,22 @@ footer
 	</script>
 </head>
 <body>
-<header>
+	<header>
 		<div class="logo">
 			<img src="img/logo.png" width="100">
 			<h1>THDC Institute of Hydropower Engineering and Technology</h1>
 		</div>
-		<nav style='display:grid;
-	grid-template-columns:6fr 1fr;'>
+		<nav>
 			<h1>Provisional Marksheet Portal</h1>
-			<div>
-				<a href="javascript:void(0)" class='btn' onclick="bdf()">Login</a>
-			</div>
 		</nav>
 	</header>
-	<div  style="background-color:rgba(0,0,0,0.7); position:fixed; width:100%; height:100%; top:0;left:0;z-index:100;" hidden id='bdf' >
-<div class="lg bfg" style="z-index:101;transition:0.5s;">
-		<form action="./Controller/" class="bx" onsubmit="validate()" method="post">
-			<h1>Login <span style='float:right;color:red;user-select:none; cursor:pointer;' onclick="bdf()">X</span></h1>
-			<div>
-				<label for="lid">Id</label></div>
-				<div class="bo"><input type="text" id='lid' placeholder="Login ID"  name='lid'  required>
-			</div>
-			<div>
-				<label for="pass">Password</label></div>
-				<div class="bo"><input type="Password" id='pass' placeholder="Login Password"  name='pass' required>
-			</div>
-			<div class="bo">
-				<input type="submit" value="Login" >
-			</div>
-		</form>
-	</div>
-</div>
-	<div class="xyz">		
-<div class="bd">
-		<div class="bx" id="log">
-	      	<h1>Instructions</h1>
-	      	<ol>
-	      	<li><h3> Kindly fill all your details in the form given in portal. (Applying)</h3></li>
-<li><h3>  Once the details are filled , check the mail id which you provided. (Waiting Time)</h3></li>
-<li><h3>  You shall receive a copy of the provisional marksheet on your mail id.(Receiving Soft Copy)</h3></li>
-<li><h3> Take a Print out of this and then get it signed from the Dy.Controller of Examination Division.(Validating)</h3></li>
-	      	</ol>
+	<div  class="bx xyz" style="padding-bottom:200px; ">
+				<div class="grd">
+					<h1>Your Request is submitted you will get copy of Provision within 48 hrs in your this-<?php echo $email;?> email account .</h1>
 	      	</div>
 	      </div>
-<div class="lg">
-		<form action="./_apply.php" class="bx" onsubmit="validate()" method="post">
-			<div>
-				<label for="stud-name">Student Name</label></div>
-				<div class="bo"><input type="text" id='stud-name' placeholder="Student Name"  name='sname'  required>
-			</div>
-			<div>
-				<label for="father-name">Father's Name</label></div>
-				<div class="bo"><input type="text" id='father-name' placeholder="Father's Name"  name='fname' required>
-			</div>
-			<div>
-				<label for="roll-no">Roll No.</label></div>
-				<div class="bo"><input type="number" id='roll-no' placeholder="Roll No."  name='rno' required>
-			</div>
-					<div>
-				<label for="brnch">Branch</label>			</div>
-				<div class="bo"><select id='brnch' name='brnch'>
-					<option selected value='CSE'>CSE</option>
-					<option value="ECE">ECE</option>
-					<option value="CE">CE</option>
-					<option value="ME">ME</option>
-					<option value="EE">EE</option>	
-				</select></div> 
 
-			<div>
-				<label for="mail">Email</label></div>
-				<div class="bo"><input type="email" id='mail' placeholder="Where Provisional to be receive"  name='mail'  required>
-			</div>
-			<div class="bo">
-				<input type="submit" value="Initiate for Provisional" >
-			</div>
-		</form>
-	</div>
-</div>
-		<?php
+	<?php
 	include 'footer.php';
 	?>
 </body>
